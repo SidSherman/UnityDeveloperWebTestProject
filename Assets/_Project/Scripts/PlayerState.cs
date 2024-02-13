@@ -6,6 +6,7 @@ public class PlayerState : MonoBehaviour
     private int _currentScore;
     [SerializeField] YG.Saver _saver;
     [SerializeField] TextMeshProUGUI _scoreText;
+    [SerializeField] YG.LeaderboardYG _leaderboard;
 
     public int CurrentScore { get => _currentScore; set => _currentScore = value; }
 
@@ -59,6 +60,13 @@ public class PlayerState : MonoBehaviour
         UpdateUI();
     }
 
+    public void ToggleLeaderboard()
+    {
+        if(_leaderboard)
+        {
+            _leaderboard.gameObject.SetActive(!_leaderboard.gameObject.activeInHierarchy);
+        }
+    }
 }
 
 
