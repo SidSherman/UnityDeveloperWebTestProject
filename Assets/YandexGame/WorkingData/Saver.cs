@@ -5,7 +5,7 @@ namespace YG
 {
     public class Saver : MonoBehaviour
     {
-        [SerializeField] PlayerState _playerState;
+        [SerializeField] GameManager _playerState;
 
         private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
         private void OnDisable() => YandexGame.GetDataEvent -= GetLoad;

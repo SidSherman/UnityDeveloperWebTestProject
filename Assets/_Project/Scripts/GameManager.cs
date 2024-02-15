@@ -1,12 +1,13 @@
 using TMPro;
 using UnityEngine;
 
-public class PlayerState : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     private int _currentScore;
     [SerializeField] YG.Saver _saver;
     [SerializeField] TextMeshProUGUI _scoreText;
     [SerializeField] YG.LeaderboardYG _leaderboard;
+    [SerializeField] YG.YandexGame _yandexGame;
 
     public int CurrentScore { get => _currentScore; set => _currentScore = value; }
 
