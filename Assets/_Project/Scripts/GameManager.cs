@@ -1,5 +1,8 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using UnityEngine.SocialPlatforms.Impl;
+using YG;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,18 +14,45 @@ public class GameManager : MonoBehaviour
 
     public int CurrentScore { get => _currentScore; set => _currentScore = value; }
 
-    void Start()
+    private void OnEnable()
+    {
+        YG.YandexGame.GetDataEvent += OnGameInit;
+        YG.YandexGame.RewardVideoEvent += GetReward;
+    }
+
+    private void OnDisable()
+    {
+        YG.YandexGame.RewardVideoEvent -= GetReward;
+        YG.YandexGame.GetDataEvent -= OnGameInit;
+    }
+
+    private void Start()
+    {
+        OnGameInit();
+    }
+
+    void OnGameInit()
     {
         Load();
+        SetLocale(YG.YandexGame.EnvironmentData.language);
         UpdateUI();
     }
 
+  
     public void UpdateUI()
     {
-        if(_scoreText)
+        if (_scoreText)
         {
             _scoreText.text = string.Empty;
             _scoreText.text = _currentScore.ToString();
+        }
+    }
+
+    public void SetLocale(string language)
+    {
+        if (LocalizationSettings.AvailableLocales.GetLocale(language))
+        {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale(language);
         }
     }
 
@@ -63,11 +93,22 @@ public class GameManager : MonoBehaviour
 
     public void ToggleLeaderboard()
     {
-        if(_leaderboard)
+        if (_leaderboard)
         {
+            _leaderboard.NewScore(_currentScore);
             _leaderboard.gameObject.SetActive(!_leaderboard.gameObject.activeInHierarchy);
         }
     }
+
+    public void GetReward(int id)
+    {
+        if(id == 1)
+        {
+            ChageScore(_currentScore);
+        }
+    }
+
 }
+
 
 

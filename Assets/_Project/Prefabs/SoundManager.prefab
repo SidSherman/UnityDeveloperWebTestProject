@@ -44,4 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd7907e448fdd344a6baa7b9592ae1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _source: {fileID: 0}
+  _audioSource: {fileID: 0}
+  _musicSource: {fileID: 0}
+  _sloudPlayMusic: 1
+  _musicKey: MenuMusic

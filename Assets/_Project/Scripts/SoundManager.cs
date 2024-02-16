@@ -1,15 +1,14 @@
 using Plugins.Audio.Core;
-using UnityEditor;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : AudioPauseHandler
 {
     [SerializeField] private SourceAudio _audioSource;
     [SerializeField] private SourceAudio _musicSource;
     [SerializeField] private bool _sloudPlayMusic;
     [SerializeField] private string _musicKey;
+    private bool _isPlaying = true;
 
     public bool SloudPlayMusic { get => _sloudPlayMusic; set => _sloudPlayMusic = value; }
     public string MusicKey { get => _musicKey; set => _musicKey = value; }
@@ -33,44 +32,20 @@ public class SoundManager : MonoBehaviour
     {
         AudioSource.PlayOneShot(audioKey);
     }
-
+    
     public void ToggleSound()
     {
-        AudioSource.Mute = !AudioSource.Mute;
-        
-        if (AudioSource.IsPlaying)
+        if(_isPlaying)
         {
-            //_source.Pause();
+            Instance.PauseAudio();
             Debug.Log("Звук выключен");
         }
         else
         {
-            //_source.UnPause();
+            Instance.UnpauseAudio();
             Debug.Log("Звук включен");
         }
+        _isPlaying = !_isPlaying;
+       
     }
-
-
-
 }
-
-/*
-[CustomEditor(typeof(SoundManager))]
-public class SoundManagerEditor : Editor
-{
-
-
-    override public void OnInspectorGUI()
-    {
-  
-        var soundManager = target as SoundManager;
-  
-        soundManager.AudioSource = (SourceAudio)EditorGUILayout.ObjectField(soundManager.AudioSource, typeof(SourceAudio), true);
-
-        soundManager.SloudPlayMusic = EditorGUILayout.BeginToggleGroup("Slould Play Music", soundManager.SloudPlayMusic);
-        soundManager.MusicSource = (SourceAudio)EditorGUILayout.ObjectField(soundManager.MusicSource, typeof(SourceAudio), true);
-        soundManager.MusicKey = EditorGUILayout.TextField("", soundManager.MusicKey);
-        EditorGUILayout.EndToggleGroup();
-
-    }
-}*/
