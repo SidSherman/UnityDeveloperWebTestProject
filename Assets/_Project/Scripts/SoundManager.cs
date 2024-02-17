@@ -6,47 +6,95 @@ public class SoundManager : AudioPauseHandler
 {
     [SerializeField] private SourceAudio _audioSource;
     [SerializeField] private SourceAudio _musicSource;
-    [SerializeField] private AudioListener _listener;
     [SerializeField] private bool _sloudPlayMusic;
     [SerializeField] private string _musicKey;
-    private bool _isPlaying = true;
+    
+    public static bool _isShouldPlaying = true;
 
-    public bool SloudPlayMusic { get => _sloudPlayMusic; set => _sloudPlayMusic = value; }
+    public bool ShouldPlayMusic { get => _sloudPlayMusic; set => _sloudPlayMusic = value; }
     public string MusicKey { get => _musicKey; set => _musicKey = value; }
     public SourceAudio MusicSource { get => _musicSource; set => _musicSource = value; }
     public SourceAudio AudioSource { get => _audioSource; set => _audioSource = value; }
 
+
     private void Start()
     {
-        if(SloudPlayMusic)
+        
+        if (ShouldPlayMusic)
         {
             PlaySound(_musicKey);
+        }
+        if(_isShouldPlaying == false)
+        {
+            MuteSound(false);
         }
     }
 
     public void PlaySound(string audioKey)
     {
-        AudioSource.Play(audioKey);
+        if (AudioSource)
+            AudioSource.Play(audioKey);
     }
 
     public void PlayOneShot(string audioKey)
     {
-        AudioSource.PlayOneShot(audioKey);
+        if(AudioSource)
+            AudioSource.PlayOneShot(audioKey);
     }
     
     public void ToggleSound()
     {
-        if(_isPlaying)
+        if(_isShouldPlaying)
         {
-            _listener.enabled = false;
-            Debug.Log("Звук выключен");
+            MuteSound(false);
         }
         else
         {
-            _listener.enabled = true;
+            UnmuteSound(false);  
+        }
+    }
+
+    public void MuteSound(bool isAds)
+    {
+        if(!isAds)
+        {
+           
+            _isShouldPlaying = false;
+        }
+
+        if (MusicSource)
+            MusicSource.Mute = true;
+
+        if (AudioSource)
+            AudioSource.Mute = true;
+        Debug.Log("Звук выключен");
+
+    }
+    public void UnmuteSound(bool isAds)
+    {
+        if(!isAds)
+        {
+            _isShouldPlaying = true;
+            if (MusicSource)
+                MusicSource.Mute = false;
+            if (AudioSource)
+                AudioSource.Mute = false;
+            //AudioListener.pause = false;
             Debug.Log("Звук включен");
         }
-        _isPlaying = !_isPlaying;
+        else
+        {
+            if(_isShouldPlaying)
+            {
+                if (MusicSource)
+                    MusicSource.Mute = false;
+                if (AudioSource)
+                    AudioSource.Mute = false;
+                //AudioListener.pause = false;
+                Debug.Log("Звук включен");
+            }
+        }
        
+
     }
 }

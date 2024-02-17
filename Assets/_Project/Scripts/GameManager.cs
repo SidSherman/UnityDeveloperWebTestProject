@@ -1,16 +1,18 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
-using UnityEngine.SocialPlatforms.Impl;
-using YG;
 
 public class GameManager : MonoBehaviour
 {
+
+    [SerializeField] private TextMeshProUGUI _debugText;
+    [SerializeField] private TextMeshProUGUI _scoreText;
+    [SerializeField] private YG.LeaderboardYG _leaderboard;
+    [SerializeField] private YG.YandexGame _yandexGame;
+    [SerializeField] private YG.Saver _saver;
+   
+
     private int _currentScore;
-    [SerializeField] YG.Saver _saver;
-    [SerializeField] TextMeshProUGUI _scoreText;
-    [SerializeField] YG.LeaderboardYG _leaderboard;
-    [SerializeField] YG.YandexGame _yandexGame;
 
     public int CurrentScore { get => _currentScore; set => _currentScore = value; }
 
@@ -31,28 +33,31 @@ public class GameManager : MonoBehaviour
         OnGameInit();
     }
 
+    private void Update()
+    {
+        if(_debugText != null)
+            DebugText(YG.YandexGame.timerShowAd.ToString());              
+    }
+
     void OnGameInit()
     {
         Load();
-        SetLocale(YG.YandexGame.EnvironmentData.language);
         UpdateUI();
     }
 
   
     public void UpdateUI()
     {
+        if (_leaderboard)
+        {
+            _leaderboard.NewScore(_currentScore);
+            _leaderboard.UpdateLB();
+        }
+
         if (_scoreText)
         {
             _scoreText.text = string.Empty;
             _scoreText.text = _currentScore.ToString();
-        }
-    }
-
-    public void SetLocale(string language)
-    {
-        if (LocalizationSettings.AvailableLocales.GetLocale(language))
-        {
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale(language);
         }
     }
 
@@ -75,21 +80,14 @@ public class GameManager : MonoBehaviour
     public void ChangeScore(int score)
     {
         _currentScore += score;
-
-        //check and fix negative valeu
-        if(_currentScore<0)
+        _currentScore = (int) Mathf.Clamp(_currentScore, 0.0f , _currentScore);
+        //check and fix negative value
+        if (_currentScore < 0)
         {
             _currentScore = 0;
         }
-
+       
         Save();
-
-        // Update leaderboard
-        if (_leaderboard)
-        {
-            _leaderboard.NewScore(_currentScore);
-            _leaderboard.UpdateLB();
-        }
             
         UpdateUI();
     }
@@ -102,14 +100,17 @@ public class GameManager : MonoBehaviour
             _saver.Save();
             _saver.Load();
         }
+
+    
         UpdateUI();
     }
 
     public void ToggleLeaderboard()
     {
+        UpdateUI();
+
         if (_leaderboard)
         {
-            _leaderboard.UpdateLB();
             _leaderboard.gameObject.SetActive(!_leaderboard.gameObject.activeInHierarchy);
         }
     }
@@ -126,6 +127,15 @@ public class GameManager : MonoBehaviour
             {
                 ChangeScore(1);
             }
+        }
+    }
+
+
+    public void DebugText(string debugText)
+    {
+        if (_debugText)
+        {
+            _debugText.text = debugText;
         }
     }
 
