@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
         {
             _leaderboard.NewScore(_currentScore);
             _leaderboard.UpdateLB();
+
         }
 
         if (_scoreText)
