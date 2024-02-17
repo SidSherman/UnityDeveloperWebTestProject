@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     {
        // YG.YandexGame.GetDataEvent += OnGameInit;
         YG.YandexGame.RewardVideoEvent += GetReward;
+
     }
 
     private void OnDisable()
@@ -45,7 +46,6 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
-  
     public void UpdateUI()
     {
         if (_leaderboard)

@@ -17,6 +17,22 @@ public class SoundManager : AudioPauseHandler
     public SourceAudio AudioSource { get => _audioSource; set => _audioSource = value; }
 
 
+    private void OnEnable()
+    {
+        YG.YandexGame.OpenFullAdEvent += OnAdsOpen;
+        YG.YandexGame.OpenVideoEvent += OnAdsOpen;
+        YG.YandexGame.CloseFullAdEvent += OnAdsClose;
+        YG.YandexGame.CloseVideoEvent += OnAdsClose;
+
+    }
+    private void OnDisable()
+    {
+        YG.YandexGame.OpenFullAdEvent -= OnAdsOpen;
+        YG.YandexGame.OpenVideoEvent -= OnAdsOpen;
+        YG.YandexGame.CloseFullAdEvent -= OnAdsClose;
+        YG.YandexGame.CloseVideoEvent -= OnAdsClose;
+    }
+
     private void Start()
     {
         
@@ -54,6 +70,15 @@ public class SoundManager : AudioPauseHandler
         }
     }
 
+    public void OnAdsOpen()
+    {
+        MuteSound(true);
+    }
+    public void OnAdsClose()
+    {
+        UnmuteSound(true);
+    }
+
     public void MuteSound(bool isAds)
     {
         if(!isAds)
@@ -70,6 +95,7 @@ public class SoundManager : AudioPauseHandler
         Debug.Log("Звук выключен");
 
     }
+
     public void UnmuteSound(bool isAds)
     {
         if(!isAds)
