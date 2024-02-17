@@ -6,6 +6,7 @@ public class SoundManager : AudioPauseHandler
 {
     [SerializeField] private SourceAudio _audioSource;
     [SerializeField] private SourceAudio _musicSource;
+    [SerializeField] private AudioListener _listener;
     [SerializeField] private bool _sloudPlayMusic;
     [SerializeField] private string _musicKey;
     private bool _isPlaying = true;
@@ -37,12 +38,12 @@ public class SoundManager : AudioPauseHandler
     {
         if(_isPlaying)
         {
-            Instance.PauseAudio();
+            _listener.enabled = false;
             Debug.Log("Звук выключен");
         }
         else
         {
-            Instance.UnpauseAudio();
+            _listener.enabled = true;
             Debug.Log("Звук включен");
         }
         _isPlaying = !_isPlaying;

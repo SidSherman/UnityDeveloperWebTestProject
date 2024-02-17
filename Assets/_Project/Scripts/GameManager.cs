@@ -16,14 +16,14 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        YG.YandexGame.GetDataEvent += OnGameInit;
+       // YG.YandexGame.GetDataEvent += OnGameInit;
         YG.YandexGame.RewardVideoEvent += GetReward;
     }
 
     private void OnDisable()
     {
         YG.YandexGame.RewardVideoEvent -= GetReward;
-        YG.YandexGame.GetDataEvent -= OnGameInit;
+      //  YG.YandexGame.GetDataEvent -= OnGameInit;
     }
 
     private void Start()
@@ -72,11 +72,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ChageScore(int score)
+    public void ChangeScore(int score)
     {
         _currentScore += score;
 
+        //check and fix negative valeu
+        if(_currentScore<0)
+        {
+            _currentScore = 0;
+        }
+
         Save();
+
+        // Update leaderboard
+        if (_leaderboard)
+        {
+            _leaderboard.NewScore(_currentScore);
+            _leaderboard.UpdateLB();
+        }
+            
         UpdateUI();
     }
 
@@ -95,7 +109,7 @@ public class GameManager : MonoBehaviour
     {
         if (_leaderboard)
         {
-            _leaderboard.NewScore(_currentScore);
+            _leaderboard.UpdateLB();
             _leaderboard.gameObject.SetActive(!_leaderboard.gameObject.activeInHierarchy);
         }
     }
@@ -104,7 +118,14 @@ public class GameManager : MonoBehaviour
     {
         if(id == 1)
         {
-            ChageScore(_currentScore);
+            if(_currentScore != 0)
+            {
+                ChangeScore(_currentScore);
+            }
+            else
+            {
+                ChangeScore(1);
+            }
         }
     }
 

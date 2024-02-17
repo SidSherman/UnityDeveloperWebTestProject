@@ -30,7 +30,7 @@ public class LevelLoader : MonoBehaviour
     {
         int index = SceneManager.GetActiveScene().buildIndex +1;
 
-        if(index < SceneManager.sceneCount)
+        if(index <= SceneManager.sceneCount)
         {
             LoadLevelByIndex(index);
         }
